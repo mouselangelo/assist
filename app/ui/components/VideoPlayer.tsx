@@ -1,7 +1,7 @@
-import React from "react";
 import { Video } from "expo-av";
-import { View, StyleSheet, Button } from "react-native";
-import { threadId } from "worker_threads";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import VideoPlayerControls from "./VideoPlayerControls";
 
 type props = { file: string };
 
@@ -12,9 +12,21 @@ class VideoPlayer extends React.Component<props> {
     isPlaying: false,
   };
 
+  play = () => {
+    this.videoRef?.playAsync();
+    this.setState({ isPlaying: true });
+  };
+
+  pause = () => {
+    this.videoRef?.pauseAsync();
+    this.setState({ isPlaying: false });
+  };
+
   render() {
     const { file } = this.props;
     const { isPlaying } = this.state;
+
+    console.log(isPlaying);
 
     const action = () => {};
     return (
@@ -31,38 +43,17 @@ class VideoPlayer extends React.Component<props> {
           shouldPlay={false}
           isLooping={false}
           style={styles.video}
-          onPlaybackStatusUpdate={(data) => {
-            console.log("onPlaybackStatusUpdate", data);
-          }}
-          progressUpdateIntervalMillis={100}
         />
-        <View style={styles.controls}>
-          <Button
-            onPress={() => {
-              if (isPlaying) {
-                this.setState({ isPlaying: false });
-                this.videoRef?.pauseAsync();
-              } else {
-                this.setState({ isPlaying: true });
-                this.videoRef?.playAsync();
-              }
-            }}
-            title={isPlaying ? "Pause" : "Play"}
-          />
-          <Button
-            onPress={() => {
-              if (!isPlaying) {
-                return;
-              }
-              this.videoRef?.playFromPositionAsync(10 * 1000, {
-                toleranceMillisAfter: 100,
-                toleranceMillisBefore: 100,
-              });
-            }}
-            title="<<"
-          />
-          <Button onPress={action} title=">>" />
-        </View>
+        <VideoPlayerControls
+          isPlaying={isPlaying}
+          togglePlay={() => {
+            if (isPlaying) {
+              this.pause();
+            } else {
+              this.play();
+            }
+          }}
+        />
       </View>
     );
   }
@@ -71,17 +62,6 @@ class VideoPlayer extends React.Component<props> {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000000" },
   video: { flex: 1, backgroundColor: "#000000" },
-  controls: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#00000055",
-    height: 30,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
 });
 
 export default VideoPlayer;
