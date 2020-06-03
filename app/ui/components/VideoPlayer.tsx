@@ -10,6 +10,8 @@ class VideoPlayer extends React.Component<props> {
 
   state = {
     isPlaying: false,
+    totalTime: 0,
+    currentTime: 0,
   };
 
   play = () => {
@@ -22,11 +24,32 @@ class VideoPlayer extends React.Component<props> {
     this.setState({ isPlaying: false });
   };
 
+  rewind = () => {};
+
+  forward = () => {};
+
+  playerStateUpdated = ({
+    isLoaded,
+    durationMillis,
+    positionMillis,
+    playableDurationMillis,
+    didJustFinish,
+  }: {
+    isLoaded: boolean;
+    didJustFinish: boolean;
+    durationMillis: number;
+    positionMillis: number;
+    playableDurationMillis: number;
+  }) => {
+    this.setState({
+      totalTime: durationMillis,
+      currentTime: positionMillis,
+    });
+  };
+
   render() {
     const { file } = this.props;
-    const { isPlaying } = this.state;
-
-    console.log(isPlaying);
+    const { isPlaying, currentTime, totalTime } = this.state;
 
     const action = () => {};
     return (
@@ -43,9 +66,14 @@ class VideoPlayer extends React.Component<props> {
           shouldPlay={false}
           isLooping={false}
           style={styles.video}
+          onPlaybackStatusUpdate={(status) => {
+            this.playerStateUpdated({ ...status });
+          }}
         />
         <VideoPlayerControls
           isPlaying={isPlaying}
+          currentTime={currentTime}
+          totalTime={totalTime}
           togglePlay={() => {
             if (isPlaying) {
               this.pause();
@@ -53,6 +81,8 @@ class VideoPlayer extends React.Component<props> {
               this.play();
             }
           }}
+          rewind={this.rewind}
+          forward={this.forward}
         />
       </View>
     );
