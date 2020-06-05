@@ -8,6 +8,8 @@ type props = { file: string };
 class VideoPlayer extends React.Component<props> {
   videoRef: Video | null = null;
 
+  isScrubbing = false;
+
   state = {
     isPlaying: false,
     totalTime: 0,
@@ -15,8 +17,8 @@ class VideoPlayer extends React.Component<props> {
   };
 
   play = () => {
-    this.videoRef?.playAsync();
     this.setState({ isPlaying: true });
+    this.videoRef?.playAsync();
   };
 
   pause = () => {
@@ -24,9 +26,17 @@ class VideoPlayer extends React.Component<props> {
     this.setState({ isPlaying: false });
   };
 
-  rewind = () => {};
+  rewind = () => {
+    this.videoRef?.setPositionAsync(this.state.currentTime - 5000);
+  };
 
-  forward = () => {};
+  forward = () => {
+    this.videoRef?.setPositionAsync(this.state.currentTime + 5000);
+  };
+
+  scrubTo = (position: number) => {
+    this.videoRef?.setPositionAsync(position);
+  };
 
   playerStateUpdated = ({
     isLoaded,
@@ -41,6 +51,9 @@ class VideoPlayer extends React.Component<props> {
     positionMillis: number;
     playableDurationMillis: number;
   }) => {
+    if (this.isScrubbing) {
+      return;
+    }
     this.setState({
       totalTime: durationMillis,
       currentTime: positionMillis,
@@ -83,6 +96,16 @@ class VideoPlayer extends React.Component<props> {
           }}
           rewind={this.rewind}
           forward={this.forward}
+          onScrubStart={() => {
+            this.isScrubbing = true;
+            this.pause();
+          }}
+          onScrubEnd={() => {
+            this.isScrubbing = false;
+
+            this.play();
+          }}
+          scrubTo={this.scrubTo}
         />
       </View>
     );
