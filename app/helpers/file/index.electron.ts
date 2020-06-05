@@ -1,5 +1,3 @@
-import { convertToAudio } from "./ffmpeg";
-
 const { dialog } = require("electron").remote;
 
 export const importVideo = async () => {

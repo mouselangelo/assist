@@ -1,17 +1,21 @@
 import React from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Button } from "react-native-paper";
 import { navBar } from "../style/dimensions";
 
 export type NavigationAction = {
   title: string;
   action: typeof Button.prototype.props.onPress;
+  icon?: string;
 };
 
 const NavigationBar = ({ actions }: { actions: NavigationAction[] }) => {
   return (
     <View style={styles.actions}>
-      {actions.map(({ title, action }) => (
-        <Button title={title} onPress={action} />
+      {actions.reverse().map(({ title, action, icon }) => (
+        <Button compact uppercase={false} icon={icon} onPress={action}>
+          {title}
+        </Button>
       ))}
     </View>
   );
