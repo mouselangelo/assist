@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createBrowserApp } from "@react-navigation/web";
 
-import RootStack from "./ui/navigation/MainNavigationStack";
+import RootStack from "./ui/navigation/RootNavigationStack";
 
 const Main =
   Platform.OS === "web"
