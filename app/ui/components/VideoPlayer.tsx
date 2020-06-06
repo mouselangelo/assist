@@ -1,6 +1,7 @@
 import { Video } from "expo-av";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import VideoPlayerControls from "./VideoPlayerControls";
 
 type props = { file: string };
@@ -11,6 +12,7 @@ class VideoPlayer extends React.Component<props> {
   isScrubbing = false;
 
   state = {
+    isLoading: true,
     isPlaying: false,
     totalTime: 0,
     currentTime: 0,
@@ -39,30 +41,29 @@ class VideoPlayer extends React.Component<props> {
   };
 
   playerStateUpdated = ({
-    isLoaded,
-    durationMillis,
-    positionMillis,
-    playableDurationMillis,
-    didJustFinish,
+    isLoaded = false,
+    durationMillis = NaN,
+    positionMillis = 0,
   }: {
-    isLoaded: boolean;
-    didJustFinish: boolean;
-    durationMillis: number;
-    positionMillis: number;
-    playableDurationMillis: number;
+    isLoaded?: boolean;
+    durationMillis?: number;
+    positionMillis?: number;
   }) => {
     if (this.isScrubbing) {
       return;
     }
+    const isLoading = !isLoaded && isNaN(durationMillis);
+
     this.setState({
-      totalTime: durationMillis,
+      isLoading,
+      totalTime: isNaN(durationMillis) ? 0 : durationMillis,
       currentTime: positionMillis,
     });
   };
 
   render() {
     const { file } = this.props;
-    const { isPlaying, currentTime, totalTime } = this.state;
+    const { isPlaying, currentTime, totalTime, isLoading } = this.state;
 
     const action = () => {};
     return (
@@ -79,8 +80,23 @@ class VideoPlayer extends React.Component<props> {
           shouldPlay={false}
           isLooping={false}
           style={styles.video}
+          onLoadStart={() => {
+            console.log("started loading");
+          }}
           onPlaybackStatusUpdate={(status) => {
-            this.playerStateUpdated({ ...status });
+            console.log("onPlaybackStatusUpdate", status);
+            if (status.isLoaded) {
+              const { isLoaded, durationMillis, positionMillis } = status;
+              this.playerStateUpdated({
+                isLoaded,
+                durationMillis,
+                positionMillis,
+              });
+            } else {
+              this.playerStateUpdated({
+                isLoaded: false,
+              });
+            }
           }}
         />
         <VideoPlayerControls
@@ -107,6 +123,11 @@ class VideoPlayer extends React.Component<props> {
           }}
           scrubTo={this.scrubTo}
         />
+        {isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator animating={true} />
+          </View>
+        )}
       </View>
     );
   }
@@ -122,6 +143,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
     width: 1280 * 0.8,
     height: 720 * 0.8,
+  },
+  loading: {
+    backgroundColor: "#00000055",
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
   },
 });
 

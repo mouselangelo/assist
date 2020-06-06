@@ -7,10 +7,10 @@ import VideoPlayer from "./ui/components/VideoPlayer";
 import { generateSubtitles } from "./lib/subtitles";
 import ProgressModal from "./ui/components/ProgressModal";
 
+const testFile = "/Users/chetan/Documents/videos/clips/hello.mp4";
+
 const App = () => {
-  const [videoFile, setVideoFile] = useState<string | null>(
-    "/Users/chetan/Documents/videos/clips/hello.mp4"
-  );
+  const [videoFile, setVideoFile] = useState<string | null>(null);
 
   const [subtitles, setSubtitles] = useState<object | null>(null);
   const [showSubtitlesProgress, setShowSubtitlesProgress] = useState(false);
