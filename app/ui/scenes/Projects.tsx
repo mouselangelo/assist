@@ -40,9 +40,14 @@ export type Props = {
 };
 
 const Projects: React.FC<Props> = ({ navigation }) => {
+  const [isCreating, setIsCreating] = useState(false);
   const createProjectAction = async () => {
+    setIsCreating(true);
     const project = await createProject();
-    navigation.navigate("EditProject", project);
+    if (project) {
+      navigation.navigate("EditProject", project);
+    }
+    setIsCreating(false);
   };
 
   return (
@@ -59,6 +64,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
         onPress={async () => {
           await createProjectAction();
         }}
+        loading={isCreating}
       />
     </View>
   );
