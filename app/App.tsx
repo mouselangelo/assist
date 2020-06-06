@@ -1,19 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
-import { createAppContainer } from "react-navigation";
-import { createBrowserApp } from "@react-navigation/web";
-
+import { StyleSheet, View } from "react-native";
 import RootStack from "./ui/navigation/RootNavigationStack";
-
-const Main =
-  Platform.OS === "web"
-    ? createBrowserApp(RootStack)
-    : createAppContainer(RootStack);
 
 const App: React.FC<{}> = ({}) => {
   return (
     <View style={styles.container}>
-      <Main />
+      <RootStack />
     </View>
   );
 };
