@@ -13,7 +13,8 @@ const App = () => {
   );
 
   const [subtitles, setSubtitles] = useState<object | null>(null);
-  const [showSubtitlesProgress, setShowSubtitlesProgress] = useState(true);
+  const [showSubtitlesProgress, setShowSubtitlesProgress] = useState(false);
+  const [subProgress, setSubProgress] = useState({ progress: 0, stage: "" });
 
   const actions = [] as NavigationAction[];
 
@@ -34,7 +35,12 @@ const App = () => {
       icon: "card-text-outline",
       action: async () => {
         setShowSubtitlesProgress(true);
-        const subtitles = await generateSubtitles({ videoFile });
+        const subtitles = await generateSubtitles({
+          videoFile,
+          onProgress: (progress: number, stage: string) => {
+            setSubProgress({ progress, stage });
+          },
+        });
         setSubtitles(subtitles);
         setShowSubtitlesProgress(false);
       },
@@ -46,7 +52,12 @@ const App = () => {
     <View style={styles.container}>
       <NavigationBar actions={actions} />
       {videoFile && <VideoPlayer file={videoFile} />}
-      {showSubtitlesProgress && <ProgressModal />}
+      {showSubtitlesProgress && (
+        <ProgressModal
+          progress={subProgress.progress}
+          stage={subProgress.stage}
+        />
+      )}
     </View>
   );
 };

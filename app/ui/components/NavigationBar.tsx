@@ -24,11 +24,10 @@ const NavigationBar = ({ actions }: { actions: NavigationAction[] }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#E5E5E5",
   },
   actions: {
     paddingTop: navBar.paddingTop,
-    backgroundColor: "#c0c0c0",
     flex: 1,
     maxHeight: navBar.height,
     alignSelf: "stretch",

@@ -189,7 +189,7 @@ class VideoPlayerControls extends React.Component<Params> {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#2228",
+    backgroundColor: "#0008",
     borderRadius: 8,
     height: 72,
     width: 440,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    bottom: 200,
+    bottom: 100,
     alignSelf: "center",
     flex: 1,
   },

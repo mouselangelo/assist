@@ -113,8 +113,16 @@ class VideoPlayer extends React.Component<props> {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: "#000000" },
-  video: { backgroundColor: "#000000" },
+  container: {
+    backgroundColor: "#000000",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  video: {
+    backgroundColor: "#000000",
+    width: 1280 * 0.8,
+    height: 720 * 0.8,
+  },
 });
 
 export default VideoPlayer;
