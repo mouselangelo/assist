@@ -10,13 +10,7 @@ import { theme } from "../style/theme";
 export type Scene = NavigationScreen<Route<string>>;
 
 const getTitle = (scene: Scene) => {
-  const { name, params } = scene.route;
-
-  const titleFromParams = (params as any)?.["title"];
-
-  if (titleFromParams && typeof titleFromParams === "string") {
-    return titleFromParams;
-  }
+  const { name } = scene.route;
   const { options } = scene.descriptor;
   const { headerTitle, title } = options;
   return (headerTitle ?? title ?? name).toString();

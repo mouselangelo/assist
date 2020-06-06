@@ -31,7 +31,7 @@ const RootStack = () => {
         key="project"
         name="EditProject"
         component={EditProject}
-        options={{ headerTitle: "Untitled" }}
+        options={{ headerTitle: "New Project" }}
       />
     </Stack.Navigator>
   );

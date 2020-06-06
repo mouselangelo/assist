@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { Card, Button, IconButton, Paragraph, FAB } from "react-native-paper";
 
@@ -7,6 +7,7 @@ import { theme } from "../style/theme";
 
 const NoProjectsCard = ({ action }: { action: () => void }) => {
   const [num, setNum] = useState(0);
+
   return (
     <Card style={styles.noProjectsCard}>
       <View>
@@ -41,6 +42,17 @@ export type Props = {
 
 const Projects: React.FC<Props> = ({ navigation }) => {
   const [isCreating, setIsCreating] = useState(false);
+
+  useEffect(() => {
+    const listener = (payload: any) => {
+      console.log("focus", payload, navigation);
+    };
+    navigation.addListener("focus", listener);
+    return () => {
+      navigation.removeListener("focus", listener);
+    };
+  }, []);
+
   const createProjectAction = async () => {
     setIsCreating(true);
     const project = await createProject();

@@ -19,6 +19,9 @@ export const theme = {
     text: "#000000",
     disabled: "#444444",
     placeholder: "#24314D",
+    lightBackground: "#f9f9f9",
+    positive: "#118822",
+    negative: "#ff6666",
   },
 };
 
