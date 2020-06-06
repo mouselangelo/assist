@@ -13,21 +13,24 @@ const NoProjectsCard = () => {
   const [num, setNum] = useState(0);
   return (
     <Card style={styles.noProjectsCard}>
-      <Card.Cover source={{ uri: `https://picsum.photos/360/200?${num}` }} />
+      <View>
+        <Card.Cover source={{ uri: `https://picsum.photos/360/200?${num}` }} />
+        <IconButton
+          icon="refresh"
+          color={theme.colors.surface}
+          size={22}
+          onPress={() => {
+            setNum(Math.random());
+          }}
+          style={styles.refresh}
+        />
+      </View>
       <Card.Title title="Hello!" titleStyle={styles.cardTitle} />
       <Card.Content>
         <Paragraph>No audio description projects yet</Paragraph>
       </Card.Content>
 
       <Card.Actions style={styles.actions}>
-        <IconButton
-          icon="refresh"
-          color={theme.colors.accent}
-          size={22}
-          onPress={() => {
-            setNum(Math.random());
-          }}
-        />
         <Button uppercase={false} onPress={createProject}>
           Start a Project
         </Button>
@@ -57,13 +60,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   actions: {
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   fab: {
     position: "absolute",
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  refresh: {
+    position: "absolute",
+    margin: 4,
+    right: 0,
+    top: 0,
+    opacity: 0.5,
   },
 });
 
