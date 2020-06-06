@@ -5,11 +5,7 @@ import { Card, Button, IconButton, Paragraph, FAB } from "react-native-paper";
 import { createProject } from "../../logic/projects";
 import { theme } from "../style/theme";
 
-export type Props = {
-  navigation: any;
-};
-
-const NoProjectsCard = () => {
+const NoProjectsCard = ({ action }: { action: () => void }) => {
   const [num, setNum] = useState(0);
   return (
     <Card style={styles.noProjectsCard}>
@@ -31,7 +27,7 @@ const NoProjectsCard = () => {
       </Card.Content>
 
       <Card.Actions style={styles.actions}>
-        <Button uppercase={false} onPress={createProject}>
+        <Button uppercase={false} onPress={action}>
           Start a Project
         </Button>
       </Card.Actions>
@@ -39,11 +35,31 @@ const NoProjectsCard = () => {
   );
 };
 
+export type Props = {
+  navigation: any;
+};
+
 const Projects: React.FC<Props> = ({ navigation }) => {
+  const createProjectAction = async () => {
+    const project = await createProject();
+    navigation.navigate("EditProject", project);
+  };
+
   return (
     <View style={styles.container}>
-      <NoProjectsCard />
-      <FAB style={styles.fab} small icon="plus" onPress={createProject} />
+      <NoProjectsCard
+        action={async () => {
+          await createProjectAction();
+        }}
+      />
+      <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={async () => {
+          await createProjectAction();
+        }}
+      />
     </View>
   );
 };
