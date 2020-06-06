@@ -2,8 +2,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Header from "./Header";
 
-import Projects from "../screens/Projects";
-import EditProject from "../screens/EditProject";
+import Projects from "../scenes/Projects";
+import EditProject from "../scenes/EditProject";
 
 const Stack = createStackNavigator<{
   Projects: undefined;
