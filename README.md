@@ -9,16 +9,16 @@ A tool to create & manage [audio descriptions](https://en.wikipedia.org/wiki/Aud
 
 > Audio description, also referred to as a video description, described video, or more precisely called a visual description, is a form of narration used to provide information surrounding key visual elements in a media work (such as a film or television program, or theatrical performance) for the benefit of blind and visually impaired consumers. [source: [wikipedia](https://en.wikipedia.org/wiki/Audio_description)]
 
-When talking to a friend who writes audio descriptions here in Berlin, I often heard her mention the lack of tools (at least inexpensive / open source ones) that could help with her work.
+When talking to a friend who writes audio descriptions here in Berlin, I often heard mention of the lack of tools (at least inexpensive / open source ones) that could help with their work.
 
 Currently, everything is done manually:
 
-- Write dialogs from the speech in the video with matching timestamps (subtitles?)
+- Write dialogs from the speech in the video with matching timestamps (subtitles?).
 - Find "gaps" between the speech, where descriptions could be inserted, measure the duration.
-- Write description matching the "gap's" scene and durartion, annotate whether the speaker mush speak it at normal pace, fast, or super-fast etc.
-- Rewind / Forward videos manually each time to listen to / watch a specific part of the transcripts.
+- Write description matching these _gaps'_ scene and durartion, annotate whether the speaker mush speak it at a normal, fast, or super-fast pace etc.
+- Rewind / Forward videos manually each time to listen to / watch a specific part of the transcript.
 
-There seems quite a few opportunities to solve some of the problems. Hence this project was born.
+There seem quite a few opportunities here to solve problems using technology! Hence this project was born.
 
 ## Planned features 🦄
 
@@ -30,9 +30,9 @@ There seems quite a few opportunities to solve some of the problems. Hence this 
 
 ### Development environment 👨‍💻👩‍💻
 
-You will need to install the following. Versions don't need to match exactly, using higher version should be fine.
+You will need to install the following. Versions don't need to match exactly, using higher version **_should_** be fine.
 
-- [node.js](https://nodejs.org/en/download/) - Needed to setup and run JavaScript!
+- [node.js](https://nodejs.org/en/download/) - Needed to setup and run JavaScript
 
 Verify:
 
@@ -50,7 +50,7 @@ Verify:
 ffmpeg version 4.2.3
 ```
 
-- [yarn](https://yarnpkg.com) package manager for node ([installed globally](https://yarnpkg.com/getting-started/install#global-install).
+- [yarn](https://yarnpkg.com) package manager for node ([installed globally](https://yarnpkg.com/getting-started/install#global-install))
 
 Install via node:
 
@@ -91,8 +91,6 @@ yarn install
 yarn expo-electron start
 
 #### others ( WIP, not all features implemented)
-# interactive interface:
-yarn start
 
 # web app
 yarn web
@@ -103,22 +101,25 @@ yarn ios
 # android (connect device or start emulator first)
 yarn android
 
+# interactive interface:
+yarn start
+
 ```
 
 ## Code 🎯
 
-- [typescript](https://www.typescriptlang.org) - is the "flavour" of choice 🍦
+- [typescript](https://www.typescriptlang.org) - is the JavaScript "flavour" of choice 🍦
 - [eslint](https://eslint.org) / [prettier](https://prettier.io) - let's keep things pretty 💄
 - testing ([jest?](https://jestjs.io)) - currently non-existent, hopefully coming soon! 💣
-- [redux](https://redux.js.org) - also coning soon 🎛
+- [redux](https://redux.js.org) - also coming soon 🎛
 
 ## React (Native) Everywhere 🤹‍♂️
 
 We are building an electron desktop app using react-native (via react-native-web)! 🙊
 
-Yeah, it's kind of experimental - so expect things to not work at times. However, there is some awesome work already done by the amazing React and JS community in general! 🙏
+Yeah, it's kind of experimental - so expect things to not work at times. However, there is awesome work already done by the amazing React and JS community! 🙏
 
-So it's been a fun adventure, and so far - it works! 🏄‍♂️
+So, it's been a fun adventure, and so far - it works! 🏄‍♂️
 
 Here are some of the awesome frameworks / libraries this is built upon:
 
