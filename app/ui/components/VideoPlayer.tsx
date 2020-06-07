@@ -1,8 +1,8 @@
 import { Video } from "expo-av";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 import VideoPlayerControls from "./VideoPlayerControls";
+import Loader from "./Loader";
 
 type props = { file: string };
 
@@ -123,11 +123,7 @@ class VideoPlayer extends React.Component<props> {
           }}
           scrubTo={this.scrubTo}
         />
-        {isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator animating={true} />
-          </View>
-        )}
+        {isLoading && <Loader isLoading={isLoading} />}
       </View>
     );
   }
