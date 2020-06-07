@@ -1,5 +1,5 @@
 export interface Project {
-  file: string;
+  videoFile: string;
   title?: string;
   description?: string;
 }

@@ -1,11 +1,16 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { theme } from "../style/theme";
 
 const Loader = ({ isLoading = true }: { isLoading?: boolean }) => {
   return (
     <View style={styles.loading}>
-      <ActivityIndicator animating={isLoading} />
+      <ActivityIndicator
+        animating={isLoading}
+        size="large"
+        color={theme.colors.accent}
+      />
     </View>
   );
 };

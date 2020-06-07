@@ -6,22 +6,27 @@ import VideoPreview from "../components/VideoPreview";
 import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
 import { saveProject } from "../../logic/projects";
+import Loader from "../components/Loader";
 
 const testFile = "/Users/chetan/Documents/videos/clips/hello-clip.mp4";
 
 const fakeProject = {
-  file: testFile,
+  videoFile: testFile,
   title: "blah",
+  projectFile: undefined,
 };
 
 type Props = RootStackNavigator<"EditProject">;
 
 const EditProject: React.FC<Props> = ({ navigation, route }) => {
-  const { file, title } = route.params?.project ?? fakeProject;
+  const { videoFile, title } = route.params?.project ?? fakeProject;
 
   const [projectTitle, setProjectTitle] = useState(title);
   const [description, setDescription] = useState("");
   const [didEdit, setDidEdit] = useState(false);
+  const [didSave, setDidSave] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [projectFile, setProjectFile] = useState<string | undefined>(undefined);
 
   navigation.addListener("blur", (payload: any) => {
     console.log("blur", payload, navigation);
@@ -30,12 +35,15 @@ const EditProject: React.FC<Props> = ({ navigation, route }) => {
     }
   });
 
+  const showDiscard = !didSave || didEdit;
+  const projectCreated = !!projectFile;
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Title title="Project Details" />
         <View style={styles.videoContainer}>
-          <VideoPreview file={file} height={320} />
+          <VideoPreview file={videoFile} height={320} />
         </View>
         <Card.Content>
           <TextInput
@@ -45,6 +53,7 @@ const EditProject: React.FC<Props> = ({ navigation, route }) => {
             onChangeText={(text) => {
               setProjectTitle(text);
               setDidEdit(true);
+              setDidSave(false);
             }}
             style={styles.input}
           />
@@ -61,36 +70,59 @@ const EditProject: React.FC<Props> = ({ navigation, route }) => {
             style={styles.input}
           />
         </Card.Content>
-        <Card.Actions style={styles.actions}>
-          <Button
-            theme={{ colors: { primary: theme.colors.negative } }}
-            onPress={() => {
-              if (didEdit) {
-                // show alert
-                console.log("discard alert");
-              } else {
-                navigation.goBack();
-              }
-            }}
-          >
-            Discard
-          </Button>
+        <Card.Actions
+          style={[
+            styles.actions,
+            { justifyContent: showDiscard ? "space-between" : "flex-end" },
+          ]}
+        >
+          {showDiscard && (
+            <Button
+              theme={{ colors: { primary: theme.colors.negative } }}
+              onPress={() => {
+                if (didEdit) {
+                  // show alert
+                  console.log("discard alert");
+                } else {
+                  navigation.goBack();
+                }
+              }}
+            >
+              Discard
+            </Button>
+          )}
           <Button
             theme={{ colors: { primary: theme.colors.positive } }}
             onPress={async () => {
-              await saveProject({
-                project: {
-                  file,
+              if (!projectCreated) {
+                setIsCreating(true);
+                const project = {
+                  videoFile,
                   title: projectTitle,
                   description,
-                },
-              });
+                };
+                const projectFile = await saveProject({
+                  project,
+                });
+                setIsCreating(false);
+                setProjectFile(projectFile);
+                if (projectFile) {
+                  setDidSave(true);
+                }
+              } else {
+                if (didEdit) {
+                  console.log("save to", projectFile);
+                } else {
+                  console.log("done");
+                }
+              }
             }}
           >
-            Create Project
+            {projectCreated ? (didEdit ? "Save" : "Done") : " Create Project"}
           </Button>
         </Card.Actions>
       </Card>
+      {isCreating && <Loader isLoading={isCreating} />}
     </View>
   );
 };
