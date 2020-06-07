@@ -17,7 +17,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const RootStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Projects"
+      initialRouteName="EditProject"
       headerMode="screen"
       screenOptions={{
         header: ({ scene, previous, navigation }) => (

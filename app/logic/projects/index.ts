@@ -1,7 +1,8 @@
-import { importVideo } from "../../helpers/file";
+import { importVideo, selectProjectLocation } from "../../helpers/file";
 import path from "path";
+import { Project } from "../../types/Project";
 
-export const createProject = async () => {
+export const startNewProject = async () => {
   const file = await importVideo();
   if (!file) {
     return;
@@ -12,4 +13,9 @@ export const createProject = async () => {
     file,
     title: fileParts.base.replace(fileParts.ext, ""),
   };
+};
+
+export const saveProject = async ({ project }: { project: Project }) => {
+  const projectFile = await selectProjectLocation(project.title);
+  console.log(projectFile);
 };

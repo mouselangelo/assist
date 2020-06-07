@@ -5,6 +5,7 @@ import { Button, Card, TextInput } from "react-native-paper";
 import VideoPreview from "../components/VideoPreview";
 import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
+import { saveProject } from "../../logic/projects";
 
 const testFile = "/Users/chetan/Documents/videos/clips/hello-clip.mp4";
 
@@ -16,7 +17,7 @@ const fakeProject = {
 type Props = RootStackNavigator<"EditProject">;
 
 const EditProject: React.FC<Props> = ({ navigation, route }) => {
-  const { file, title } = route.params.project ?? fakeProject;
+  const { file, title } = route.params?.project ?? fakeProject;
 
   const [projectTitle, setProjectTitle] = useState(title);
   const [description, setDescription] = useState("");
@@ -74,7 +75,18 @@ const EditProject: React.FC<Props> = ({ navigation, route }) => {
           >
             Discard
           </Button>
-          <Button theme={{ colors: { primary: theme.colors.positive } }}>
+          <Button
+            theme={{ colors: { primary: theme.colors.positive } }}
+            onPress={async () => {
+              await saveProject({
+                project: {
+                  file,
+                  title: projectTitle,
+                  description,
+                },
+              });
+            }}
+          >
             Create Project
           </Button>
         </Card.Actions>

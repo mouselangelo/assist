@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Card, FAB, IconButton, Paragraph } from "react-native-paper";
 
-import { createProject } from "../../logic/projects";
+import { startNewProject } from "../../logic/projects";
 import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
 
@@ -54,7 +54,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
 
   const createProjectAction = async () => {
     setIsCreating(true);
-    const project = await createProject();
+    const project = await startNewProject();
     if (project) {
       navigation.navigate("EditProject", { project });
     }
