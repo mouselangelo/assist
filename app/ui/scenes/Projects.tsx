@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import { Card, Button, IconButton, Paragraph, FAB } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, FAB, IconButton, Paragraph } from "react-native-paper";
 
 import { createProject } from "../../logic/projects";
+import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
 
 const NoProjectsCard = ({ action }: { action: () => void }) => {
@@ -36,9 +37,7 @@ const NoProjectsCard = ({ action }: { action: () => void }) => {
   );
 };
 
-export type Props = {
-  navigation: any;
-};
+type Props = RootStackNavigator<"Projects">;
 
 const Projects: React.FC<Props> = ({ navigation }) => {
   const [isCreating, setIsCreating] = useState(false);
@@ -57,7 +56,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
     setIsCreating(true);
     const project = await createProject();
     if (project) {
-      navigation.navigate("EditProject", project);
+      navigation.navigate("EditProject", { project });
     }
     setIsCreating(false);
   };

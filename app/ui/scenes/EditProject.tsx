@@ -1,31 +1,29 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Title, Card, TextInput, Button } from "react-native-paper";
-import { theme } from "../style/theme";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, TextInput } from "react-native-paper";
+
 import VideoPreview from "../components/VideoPreview";
+import { RootStackNavigator } from "../navigation";
+import { theme } from "../style/theme";
 
 const testFile = "/Users/chetan/Documents/videos/clips/hello-clip.mp4";
 
-export type Props = {
-  navigation: any;
-  route: {
-    params: { file: string; title?: string };
-  };
+const fakeProject = {
+  file: testFile,
+  title: "blah",
 };
 
-const EditProject: React.FC<Props> = (props) => {
-  const { navigation } = props;
-  const { file, title } = props.route.params ?? {
-    file: testFile,
-    title: "blah",
-  };
+type Props = RootStackNavigator<"EditProject">;
+
+const EditProject: React.FC<Props> = ({ navigation, route }) => {
+  const { file, title } = route.params.project ?? fakeProject;
 
   const [projectTitle, setProjectTitle] = useState(title);
   const [description, setDescription] = useState("");
   const [didEdit, setDidEdit] = useState(false);
 
-  navigation.addListener("willBlur", (payload: any) => {
-    console.log("willBlur", payload, navigation);
+  navigation.addListener("blur", (payload: any) => {
+    console.log("blur", payload, navigation);
     if (didEdit) {
       console.log("prevent default");
     }
