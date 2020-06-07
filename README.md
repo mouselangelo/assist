@@ -65,7 +65,7 @@ Verify:
 1.22.4
 ```
 
-> The project is currently being developed on MacOS and there might be issues running it in other environments. Feel free to add an Issue or create a Pull Request! 😀
+> The project is currently being developed on MacOS and there might be issues running it in other environments. Feel free to [add an Issue] or create a [Pull Request]! 😀
 
 ### Download & Install Project 🛠
 
@@ -133,3 +133,10 @@ Also:
 
 - [react-navigation](https://reactnavigation.org)
 - [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
+
+## Contributing
+
+I'm still figuring out where this project is going, but if you are interested in contributing, just do it! [Add an Issue] or make a [Pull Request]!
+
+[add an issue]: https://github.com/mouselangelo/assist/issues/new
+[pull request]: https://github.com/mouselangelo/assist/compare
