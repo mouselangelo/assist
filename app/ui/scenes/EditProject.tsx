@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Card, TextInput } from "react-native-paper";
+import i18n from "../../i18n";
 
 import VideoPreview from "../components/VideoPreview";
 import { RootStackNavigator } from "../navigation";
@@ -118,7 +119,11 @@ const EditProject: React.FC<Props> = ({ navigation, route }) => {
               }
             }}
           >
-            {projectCreated ? (didEdit ? "Save" : "Done") : " Create Project"}
+            {projectCreated
+              ? didEdit
+                ? "Save"
+                : "Done"
+              : i18n.t("projects.create")}
           </Button>
         </Card.Actions>
       </Card>
