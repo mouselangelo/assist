@@ -5,6 +5,8 @@ import { Button, Card, FAB, IconButton, Paragraph } from "react-native-paper";
 import { startNewProject } from "../../logic/projects";
 import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
+import { Project } from "../../types/Project";
+import EditProjectModal from "../components/EditProjectModal";
 
 const NoProjectsCard = ({ action }: { action: () => void }) => {
   const [num, setNum] = useState(0);
@@ -41,6 +43,7 @@ type Props = RootStackNavigator<"Projects">;
 
 const Projects: React.FC<Props> = ({ navigation }) => {
   const [isCreating, setIsCreating] = useState(false);
+  const [project, setProject] = useState<Project | null | undefined>(null);
 
   useEffect(() => {
     const listener = (payload: any) => {
@@ -55,9 +58,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
   const createProjectAction = async () => {
     setIsCreating(true);
     const project = await startNewProject();
-    if (project) {
-      navigation.navigate("EditProject", { project });
-    }
+    setProject(project);
     setIsCreating(false);
   };
 
@@ -77,6 +78,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
         }}
         loading={isCreating}
       />
+      {project && <EditProjectModal project={project} />}
     </View>
   );
 };

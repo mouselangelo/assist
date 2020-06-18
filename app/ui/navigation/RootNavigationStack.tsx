@@ -1,14 +1,11 @@
-import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Header from "./Header";
-
-import { Project } from "../../types/Project";
+import React from "react";
 
 import Projects from "../screens/Projects";
+import Header from "./Header";
 
 export type RootStackParamList = {
   Projects: undefined;
-  EditProject: { project: Project };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
