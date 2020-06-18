@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
+  Appbar,
   Button,
   Card,
   Modal,
@@ -30,99 +31,105 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
   const projectCreated = !!projectFile;
 
   return (
-    <Provider>
+    <Provider theme={theme}>
       <Portal>
         <Modal visible={true} dismissable={false}>
           <View style={styles.container}>
-            <Card style={styles.card}>
-              <Card.Title title="Project Details" />
-              <View style={styles.videoContainer}>
-                <VideoPreview file={videoFile} height={320} />
-              </View>
-              <Card.Content>
-                <TextInput
-                  label="Title"
-                  placeholder="I can see ..."
-                  value={projectTitle}
-                  onChangeText={(text) => {
-                    setProjectTitle(text);
-                    setDidEdit(true);
-                    setDidSave(false);
-                  }}
-                  style={styles.input}
-                />
-                <TextInput
-                  label="Description (optional)"
-                  placeholder="It's gonna be a bright, sun-shiny day..."
-                  multiline={true}
-                  numberOfLines={3}
-                  value={description}
-                  onChangeText={(text) => {
-                    setDescription(text);
-                    setDidEdit(true);
-                  }}
-                  style={styles.input}
-                />
-              </Card.Content>
-              <Card.Actions
-                style={[
-                  styles.actions,
-                  {
-                    justifyContent: showDiscard ? "space-between" : "flex-end",
-                  },
-                ]}
-              >
-                {showDiscard && (
+            <Appbar.Header style={styles.header}>
+              <Appbar.Content title="Project Details" />
+            </Appbar.Header>
+            <View style={styles.content}>
+              <Card style={styles.card}>
+                <View style={styles.videoContainer}>
+                  <VideoPreview file={videoFile} height={320} />
+                </View>
+                <Card.Content>
+                  <TextInput
+                    label="Title"
+                    placeholder="I can see ..."
+                    value={projectTitle}
+                    onChangeText={(text) => {
+                      setProjectTitle(text);
+                      setDidEdit(true);
+                      setDidSave(false);
+                    }}
+                    style={styles.input}
+                  />
+                  <TextInput
+                    label="Description (optional)"
+                    placeholder="It's gonna be a bright, sun-shiny day..."
+                    multiline={true}
+                    numberOfLines={3}
+                    value={description}
+                    onChangeText={(text) => {
+                      setDescription(text);
+                      setDidEdit(true);
+                    }}
+                    style={styles.input}
+                  />
+                </Card.Content>
+                <Card.Actions
+                  style={[
+                    styles.actions,
+                    {
+                      justifyContent: showDiscard
+                        ? "space-between"
+                        : "flex-end",
+                    },
+                  ]}
+                >
+                  {showDiscard && (
+                    <Button
+                      theme={{ colors: { primary: theme.colors.negative } }}
+                      onPress={() => {
+                        if (didEdit) {
+                          // show alert
+                          console.log("discard alert");
+                        } else {
+                          console.log("dismiss modal");
+                        }
+                      }}
+                    >
+                      Discard
+                    </Button>
+                  )}
                   <Button
-                    theme={{ colors: { primary: theme.colors.negative } }}
-                    onPress={() => {
-                      if (didEdit) {
-                        // show alert
-                        console.log("discard alert");
+                    theme={{ colors: { primary: theme.colors.positive } }}
+                    onPress={async () => {
+                      if (!projectCreated) {
+                        setIsCreating(true);
+                        const project = {
+                          videoFile,
+                          title: projectTitle,
+                          description,
+                        };
+                        const projectFile = await saveProject({
+                          project,
+                        });
+                        setIsCreating(false);
+                        setProjectFile(projectFile);
+                        if (projectFile) {
+                          setDidSave(true);
+                        }
                       } else {
-                        console.log("dismiss modal");
+                        if (didEdit) {
+                          console.log("save to", projectFile);
+                        } else {
+                          console.log("done");
+                        }
                       }
                     }}
                   >
-                    Discard
+                    {projectCreated
+                      ? didEdit
+                        ? "Save"
+                        : "Done"
+                      : i18n.t("projects.create")}
                   </Button>
-                )}
-                <Button
-                  theme={{ colors: { primary: theme.colors.positive } }}
-                  onPress={async () => {
-                    if (!projectCreated) {
-                      setIsCreating(true);
-                      const project = {
-                        videoFile,
-                        title: projectTitle,
-                        description,
-                      };
-                      const projectFile = await saveProject({
-                        project,
-                      });
-                      setIsCreating(false);
-                      setProjectFile(projectFile);
-                      if (projectFile) {
-                        setDidSave(true);
-                      }
-                    } else {
-                      if (didEdit) {
-                        console.log("save to", projectFile);
-                      } else {
-                        console.log("done");
-                      }
-                    }
-                  }}
-                >
-                  {projectCreated
-                    ? didEdit
-                      ? "Save"
-                      : "Done"
-                    : i18n.t("projects.create")}
-                </Button>
-              </Card.Actions>
-              {isCreating && <Loader isLoading={isCreating} />}
-            </Card>
+                </Card.Actions>
+                {isCreating && <Loader isLoading={isCreating} />}
+              </Card>
+            </View>
           </View>
         </Modal>
       </Portal>
@@ -132,9 +139,21 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
     alignItems: "center",
+  },
+  content: {
+    backgroundColor: theme.colors.background,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    padding: 1,
+  },
+  header: {
+    width: 602,
+    height: 48,
+  },
+  card: {
+    width: 600,
+    minHeight: 600,
   },
   videoContainer: {
     margin: 16,
@@ -145,10 +164,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
-  },
-  card: {
-    width: 600,
-    minHeight: 600,
   },
   input: {
     backgroundColor: theme.colors.lightBackground,
