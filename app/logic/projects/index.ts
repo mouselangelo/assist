@@ -3,16 +3,19 @@ import path from "path";
 import fs from "fs";
 import { Project } from "../../types/Project";
 
-export const startNewProject = async () => {
-  const file = await importVideo();
-  if (!file) {
-    return;
+export const startNewProject = async (): Promise<
+  Project | null | undefined
+> => {
+  const videoFile = await importVideo();
+  if (!videoFile) {
+    return null;
   }
-  // read the name & other properties?
-  const fileParts = path.parse(file);
+
+  const { ext, base } = path.parse(videoFile);
+  const title = base.replace(ext, "");
   return {
-    file,
-    title: fileParts.base.replace(fileParts.ext, ""),
+    videoFile,
+    title,
   };
 };
 
