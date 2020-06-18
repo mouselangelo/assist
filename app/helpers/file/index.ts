@@ -7,3 +7,6 @@ export const importVideo = async (): Promise<string> => {
 export const selectProjectLocation = async (title?: string) => {
   throw new NotSupportedError();
 };
+
+export const applicatonDir = "";
+export const documentsDir = "";

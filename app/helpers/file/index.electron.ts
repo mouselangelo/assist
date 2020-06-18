@@ -3,6 +3,9 @@ import path from "path";
 
 const { dialog, app } = remote;
 
+export const applicatonDir = app.getAppPath();
+export const documentsDir = app.getPath("documents");
+
 var lastDir: string | undefined;
 
 export const importVideo = async () => {
@@ -21,8 +24,6 @@ export const importVideo = async () => {
 };
 
 export const selectProjectLocation = async (title?: string) => {
-  const documentsDir = app.getPath("documents");
-
   const result = await dialog.showSaveDialog({
     title: "Create Project",
     message: "Create Project",
