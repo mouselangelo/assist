@@ -3,11 +3,11 @@ import { StyleSheet, View } from "react-native";
 import { Button, Card, TextInput } from "react-native-paper";
 import i18n from "../../i18n";
 
-import VideoPreview from "../components/VideoPreview";
+import VideoPreview from "./VideoPreview";
 import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
 import { saveProject } from "../../logic/projects";
-import Loader from "../components/Loader";
+import Loader from "./Loader";
 
 const testFile = "/Users/chetan/Documents/videos/clips/hello-clip.mp4";
 
