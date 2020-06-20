@@ -7,6 +7,7 @@ import { RootStackNavigator } from "../navigation";
 import { theme } from "../style/theme";
 import { Project } from "../../types/Project";
 import EditProjectModal from "../components/EditProjectModal";
+import db from "../../data";
 
 const NoProjectsCard = ({ action }: { action: () => void }) => {
   const [num, setNum] = useState(0);
@@ -43,7 +44,10 @@ type Props = RootStackNavigator<"Projects">;
 
 const Projects: React.FC<Props> = ({ navigation }) => {
   const [isCreating, setIsCreating] = useState(false);
-  const [project, setProject] = useState<Project | null | undefined>(null);
+  const [projects, setProjects] = useState<Project[] | undefined>(undefined);
+  const [currentProject, setCurrentProject] = useState<Project | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const listener = (payload: any) => {
@@ -55,10 +59,18 @@ const Projects: React.FC<Props> = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const loadData = async () => {
+      const projects = await db.collection("projects").find({});
+      setProjects(projects);
+    };
+    loadData;
+  }, []);
+
   const createProjectAction = async () => {
     setIsCreating(true);
     const project = await startNewProject();
-    setProject(project);
+    setCurrentProject(project);
     setIsCreating(false);
   };
 
@@ -69,6 +81,9 @@ const Projects: React.FC<Props> = ({ navigation }) => {
           await createProjectAction();
         }}
       />
+
+      {projects && <NoProjectsCard action={() => {}} />}
+
       <FAB
         style={styles.fab}
         small
@@ -78,7 +93,7 @@ const Projects: React.FC<Props> = ({ navigation }) => {
         }}
         loading={isCreating}
       />
-      {project && <EditProjectModal project={project} />}
+      {currentProject && <EditProjectModal project={currentProject} />}
     </View>
   );
 };

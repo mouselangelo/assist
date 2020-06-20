@@ -17,15 +17,17 @@ const promisify = <T>(db: DataStore<T>) => {
     skip: (skip: number) => cursor.skip(skip) && wrapCursor(cursor),
     limit: (limit: number) => cursor.limit(limit) && wrapCursor(cursor),
     then: (
-      onFulfilled: (value?: [T[]]) => [T[]],
-      onRejected: (error?: Error) => [T[]]
+      onFulfilled: (value?: T[] | undefined) => T[] | undefined,
+      onRejected: (error?: Error) => Error
     ) => {
-      let promise = new Promise<[T[]]>((resolve, reject) => {
+      let promise = new Promise((resolve, reject) => {
         cursor.exec((err, ...results) =>
-          err ? reject(err) : resolve(results)
+          err ? reject(err) : resolve(...results)
         );
       });
-      promise = promise.then((results) => onFulfilled(results));
+      promise = promise.then((results) =>
+        onFulfilled(results as T[] | undefined)
+      );
       if (onRejected) promise = promise.catch(onRejected);
 
       return promise;
@@ -34,12 +36,8 @@ const promisify = <T>(db: DataStore<T>) => {
 
   const wrapDataStore = (db: DataStore<T>) => ({
     insert: (doc: T) => {
-      console.log("insert");
-      return new Promise<T | T[]>((resolve, reject) => {
-        console.log("call insert");
-
+      return new Promise<T[]>((resolve, reject) => {
         db.insert(doc, (err, ...results) => {
-          console.log({ err, results });
           err ? reject(err) : resolve(results);
         });
       });
@@ -56,8 +54,8 @@ const promisify = <T>(db: DataStore<T>) => {
           err ? reject(err) : resolve(results)
         );
       }),
-    find: (query: Partial<T>, options: { projection?: Projection<T> }) =>
-      wrapCursor(db.find(query, options.projection as any)),
+    find: (query: Partial<T>, options?: { projection?: Projection<T> }) =>
+      wrapCursor(db.find(query, options?.projection as any)),
     findOne: (query: Partial<T>, options: { projection?: Projection<T> }) =>
       new Promise<T>((resolve, reject) => {
         db.findOne<T>(query, options.projection as any, (err, result) =>

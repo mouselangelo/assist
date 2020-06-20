@@ -100,20 +100,23 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                   onPress={async () => {
                     if (!projectCreated) {
                       setIsCreating(true);
-                      const project = {
-                        videoFile,
-                        title: projectTitle,
-                        description,
-                      };
-                      const projectFile = await saveProject({
-                        project,
+                      const savedProject = await saveProject({
+                        project: {
+                          videoFile,
+                          title: projectTitle,
+                          description,
+                        },
                       });
+                      if (savedProject) {
+                        project = savedProject;
+                      }
                       setIsCreating(false);
-                      setProjectFile(projectFile);
+                      setProjectFile(project.location);
                       if (projectFile) {
                         setDidEdit(false);
                         setDidSave(true);
                       }
+                      console.log({ project, savedProject, projectFile });
                     } else {
                       if (didEdit) {
                         console.log("save to", projectFile);
