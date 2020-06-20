@@ -41,6 +41,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
           <View style={styles.container}>
             <Appbar.Header style={styles.header}>
               <Appbar.Content title="Project Details" />
+              {showDiscard && <Appbar.Action icon="close" onPress={() => {}} />}
             </Appbar.Header>
             <Card style={styles.card}>
               <View style={styles.videoContainer}>
@@ -110,6 +111,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                       setIsCreating(false);
                       setProjectFile(projectFile);
                       if (projectFile) {
+                        setDidEdit(false);
                         setDidSave(true);
                       }
                     } else {
