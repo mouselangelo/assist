@@ -18,14 +18,25 @@ import Loader from "./Loader";
 import VideoPreview from "./VideoPreview";
 
 const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
-  const { videoFile, title } = project;
+  const {
+    videoFile,
+    title: projectTitle,
+    description: projectDescription,
+    _id: projectId,
+    location: projectLocation,
+  } = project;
 
-  const [projectTitle, setProjectTitle] = useState(title);
-  const [description, setDescription] = useState("");
+  const isEditing = !!projectId;
+
+  const [title, setTitle] = useState(projectTitle);
+  const [description, setDescription] = useState(projectDescription);
+
   const [didEdit, setDidEdit] = useState(false);
-  const [didSave, setDidSave] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [projectFile, setProjectFile] = useState<string | undefined>(undefined);
+  const [didSave, setDidSave] = useState(isEditing);
+  const [isSaving, setIsSaving] = useState(false);
+  const [projectFile, setProjectFile] = useState<string | undefined>(
+    projectLocation
+  );
 
   const showDiscard = !didSave || didEdit;
   const projectCreated = !!projectFile;
@@ -51,9 +62,9 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                 <TextInput
                   label="Title"
                   placeholder="I can see ..."
-                  value={projectTitle}
+                  value={title}
                   onChangeText={(text) => {
-                    setProjectTitle(text);
+                    setTitle(text);
                     setDidEdit(true);
                     setDidSave(false);
                   }}
@@ -98,19 +109,20 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                 <Button
                   theme={{ colors: { primary: theme.colors.positive } }}
                   onPress={async () => {
-                    if (!projectCreated) {
-                      setIsCreating(true);
+                    if (!projectCreated || didEdit) {
+                      setIsSaving(true);
                       const savedProject = await saveProject({
                         project: {
+                          ...project,
                           videoFile,
-                          title: projectTitle,
-                          description,
+                          title: title,
+                          description: description,
                         },
                       });
                       if (savedProject) {
                         project = savedProject;
                       }
-                      setIsCreating(false);
+                      setIsSaving(false);
                       setProjectFile(project.location);
                       if (projectFile) {
                         setDidEdit(false);
@@ -118,11 +130,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                       }
                       console.log({ project, savedProject, projectFile });
                     } else {
-                      if (didEdit) {
-                        console.log("save to", projectFile);
-                      } else {
-                        console.log("done");
-                      }
+                      console.log("done");
                     }
                   }}
                 >
@@ -135,7 +143,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
               </Card.Actions>
             </Card>
           </View>
-          {isCreating && <Loader isLoading={isCreating} />}
+          {isSaving && <Loader isLoading={isSaving} />}
         </Modal>
       </Portal>
     </Provider>

@@ -3,7 +3,10 @@ import path from "path";
 
 const { dialog, app } = remote;
 
-export const applicatonDir = app.getAppPath();
+export const applicatonDir = path.join(
+  app.getPath("appData"),
+  "com.mouselangelo.assist"
+);
 export const documentsDir = app.getPath("documents");
 
 var lastDir: string | undefined;

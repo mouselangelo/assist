@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import { Project } from "../../types/Project";
 import db from "../../data";
+import { generateCoverImage } from "../../helpers/ffmpeg";
 
 export const startNewProject = async (): Promise<Project | undefined> => {
   const videoFile = await importVideo();
@@ -19,10 +20,11 @@ export const startNewProject = async (): Promise<Project | undefined> => {
 };
 
 export const saveProject = async ({ project }: { project: Project }) => {
-  project.location = await saveProjectToDisk({ project });
+  project.location = await saveProjectToDisk(project);
   if (!project.location) {
     return;
   }
+  project.coverImageFile = await saveCoverImageToDisk(project);
   const { _id: projectId } = project;
   if (!projectId) {
     return (await db.collection("projects").insert(project))[0];
@@ -31,13 +33,20 @@ export const saveProject = async ({ project }: { project: Project }) => {
   }
 };
 
-const saveProjectToDisk = async ({ project }: { project: Project }) => {
+const saveProjectToDisk = async (project: Project) => {
   const projectLocation =
     project.location ?? (await selectProjectLocation(project.title));
   if (!projectLocation) {
     return;
   }
-  console.log(projectLocation);
   fs.writeFileSync(projectLocation, JSON.stringify(project, null, 2));
   return projectLocation;
+};
+
+const saveCoverImageToDisk = async (project: Project) => {
+  const { root, dir } = path.parse(project.location!);
+  const target = path.join(root, dir, "cover.png");
+  const args = { target, source: project.videoFile };
+  console.log(args);
+  return await generateCoverImage(args);
 };
