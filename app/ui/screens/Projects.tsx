@@ -18,11 +18,12 @@ const Projects: React.FC<Props> = ({ navigation }) => {
     undefined
   );
 
+  const loadData = async () => {
+    const projects = await db.collection("projects").find({});
+    setProjects(projects);
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      const projects = await db.collection("projects").find({});
-      setProjects(projects);
-    };
     loadData();
   }, []);
 
@@ -66,7 +67,15 @@ const Projects: React.FC<Props> = ({ navigation }) => {
         }}
         loading={isCreating}
       />
-      {currentProject && <EditProjectModal project={currentProject} />}
+      {currentProject && (
+        <EditProjectModal
+          project={currentProject}
+          onDone={() => {
+            setCurrentProject(undefined);
+            loadData();
+          }}
+        />
+      )}
     </View>
   );
 };

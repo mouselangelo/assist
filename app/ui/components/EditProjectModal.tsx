@@ -16,30 +16,29 @@ import { Project } from "../../types/Project";
 import { theme } from "../style/theme";
 import Loader from "./Loader";
 import VideoPreview from "./VideoPreview";
+import I18n from "../../i18n";
 
-const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
+type Props = { project: Project; onDone: () => void };
+const EditProjectModal: React.FC<Props> = ({ project, onDone }) => {
   const {
     videoFile,
     title: projectTitle,
     description: projectDescription,
-    _id: projectId,
     location: projectLocation,
   } = project;
 
-  const isEditing = !!projectId;
+  const isNewProject = !!project._id;
+
+  const [currentProject, setCurrentProject] = useState(project);
+  const isEditing = !!currentProject._id;
 
   const [title, setTitle] = useState(projectTitle);
   const [description, setDescription] = useState(projectDescription);
-
-  const [didEdit, setDidEdit] = useState(false);
-  const [didSave, setDidSave] = useState(isEditing);
   const [isSaving, setIsSaving] = useState(false);
-  const [projectFile, setProjectFile] = useState<string | undefined>(
-    projectLocation
-  );
+  const [hasUnsavedChanged, setHasUnsavedChanges] = useState(!isEditing);
 
-  const showDiscard = !didSave || didEdit;
-  const projectCreated = !!projectFile;
+  const primarySaveAction = isEditing ? "Save" : I18n.t("projects.create");
+  const primaryAction = hasUnsavedChanged ? primarySaveAction : "Done";
 
   return (
     <Provider theme={theme}>
@@ -52,7 +51,14 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
           <View style={styles.container}>
             <Appbar.Header style={styles.header}>
               <Appbar.Content title="Project Details" />
-              {showDiscard && <Appbar.Action icon="close" onPress={() => {}} />}
+              {!hasUnsavedChanged && (
+                <Appbar.Action
+                  icon="close"
+                  onPress={() => {
+                    onDone();
+                  }}
+                />
+              )}
             </Appbar.Header>
             <Card style={styles.card}>
               <View style={styles.videoContainer}>
@@ -65,8 +71,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                   value={title}
                   onChangeText={(text) => {
                     setTitle(text);
-                    setDidEdit(true);
-                    setDidSave(false);
+                    setHasUnsavedChanges(true);
                   }}
                   style={styles.input}
                 />
@@ -78,7 +83,7 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                   value={description}
                   onChangeText={(text) => {
                     setDescription(text);
-                    setDidEdit(true);
+                    setHasUnsavedChanges(true);
                   }}
                   style={styles.input}
                 />
@@ -87,58 +92,56 @@ const EditProjectModal: React.FC<{ project: Project }> = ({ project }) => {
                 style={[
                   styles.actions,
                   {
-                    justifyContent: showDiscard ? "space-between" : "flex-end",
+                    justifyContent: hasUnsavedChanged
+                      ? "space-between"
+                      : "flex-end",
                   },
                 ]}
               >
-                {showDiscard && (
+                {hasUnsavedChanged && (
                   <Button
+                    uppercase={false}
                     theme={{ colors: { primary: theme.colors.negative } }}
                     onPress={() => {
-                      if (didEdit) {
-                        // show alert
-                        console.log("discard alert");
-                      } else {
-                        console.log("dismiss modal");
-                      }
+                      console.log("discard alert");
                     }}
                   >
                     Discard
                   </Button>
                 )}
                 <Button
+                  uppercase={false}
                   theme={{ colors: { primary: theme.colors.positive } }}
                   onPress={async () => {
-                    if (!projectCreated || didEdit) {
+                    if (hasUnsavedChanged) {
                       setIsSaving(true);
                       const savedProject = await saveProject({
                         project: {
-                          ...project,
+                          ...currentProject,
                           videoFile,
                           title: title,
                           description: description,
                         },
                       });
-                      if (savedProject) {
-                        project = savedProject;
+                      console.log({ savedProject });
+                      if (
+                        savedProject &&
+                        savedProject.location &&
+                        savedProject._id
+                      ) {
+                        setHasUnsavedChanges(false);
+                        setCurrentProject(savedProject);
                       }
                       setIsSaving(false);
-                      setProjectFile(project.location);
-                      if (projectFile) {
-                        setDidEdit(false);
-                        setDidSave(true);
+                      if (!isEditing) {
+                        onDone();
                       }
-                      console.log({ project, savedProject, projectFile });
                     } else {
-                      console.log("done");
+                      onDone();
                     }
                   }}
                 >
-                  {projectCreated
-                    ? didEdit
-                      ? "Save"
-                      : "Done"
-                    : i18n.t("projects.create")}
+                  {primaryAction}
                 </Button>
               </Card.Actions>
             </Card>

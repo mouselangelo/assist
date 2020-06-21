@@ -16,7 +16,13 @@ export const convertToAudio = ({
   throw new NotSupportedError();
 };
 
-export const generateCoverImage = async ({ source }: { source: string }) => {
+export const generateCoverImage = async ({
+  source,
+  target,
+}: {
+  source: string;
+  target: string;
+}) => {
   throw new NotSupportedError();
 };
 

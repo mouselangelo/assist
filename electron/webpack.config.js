@@ -7,6 +7,6 @@ module.exports = (config) => {
     __dirname: false,
     __filename: false,
   };
-  console.log("expo config", expoConfig);
+  //  console.log("expo config", expoConfig);
   return expoConfig;
 };

@@ -24,26 +24,16 @@ export const convertToAudio = ({
     .noVideo()
     .output(audioFile)
     .on("codecData", (data) => {
-      console.log(data);
+      // console.log(data);
     })
     .on("progress", function (progress) {
       //  progress // {"frames":null,"currentFps":null,"currentKbps":256,"targetSize":204871,"timemark":"01:49:15.90"}
-      console.log(
-        "Processing: " +
-          progress.timemark +
-          " done " +
-          progress.targetSize +
-          " kilobytes " +
-          progress.percent +
-          "%"
-      );
       onProgress(progress.percent);
     })
     .on(
       "end",
       //listener must be a function, so to return the callback wrapping it inside a function
       function () {
-        console.log("finished: ", audioFile);
         onComplete(audioFile);
       }
     )
@@ -85,7 +75,6 @@ export const generateCoverImage = async ({
 
 export const getInfo = async ({ file }: { file: string }) => {
   const info = await ffprobe({ file });
-  console.log(info);
   return info;
 };
 

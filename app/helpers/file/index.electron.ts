@@ -17,6 +17,7 @@ export const importVideo = async () => {
     message: "Import video",
     buttonLabel: "Import",
     filters: [{ name: "Videos", extensions: ["mp4", "mov", "avi"] }],
+    defaultPath: documentsDir,
     properties: ["openFile"],
   });
   const { filePaths } = result;
@@ -27,27 +28,27 @@ export const importVideo = async () => {
 };
 
 export const selectProjectLocation = async (title?: string) => {
-  const result = await dialog.showSaveDialog({
+  const result = await dialog.showOpenDialog({
     title: "Create Project",
     message: "Create Project",
     buttonLabel: "Save",
-    nameFieldLabel: "Project File",
+    properties: ["openDirectory", "createDirectory"],
     defaultPath: path.format({
       dir: lastDir ?? documentsDir,
       name: title ?? "untitled",
     }),
   });
 
-  if (!result.filePath) {
+  const filePaths = result.filePaths;
+
+  if (!filePaths || filePaths.length <= 0) {
     return;
   }
 
-  const fileParts = path.parse(result.filePath);
+  const location = filePaths[0];
+
+  const fileParts = path.parse(location);
   lastDir = fileParts.dir;
 
-  return path.format({
-    dir: fileParts.dir,
-    name: fileParts.name,
-    ext: ".adp",
-  });
+  return location;
 };

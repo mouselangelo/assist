@@ -7,6 +7,5 @@ export const importVideo = async () => {
     copyToCacheDirectory: false,
   });
   // result.uri = mime+base64 data
-  console.log(result);
   throw new NotSupportedError();
 };

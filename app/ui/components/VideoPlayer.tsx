@@ -80,11 +80,7 @@ class VideoPlayer extends React.Component<props> {
           shouldPlay={false}
           isLooping={false}
           style={styles.video}
-          onLoadStart={() => {
-            console.log("started loading");
-          }}
           onPlaybackStatusUpdate={(status) => {
-            console.log("onPlaybackStatusUpdate", status);
             if (status.isLoaded) {
               const { isLoaded, durationMillis, positionMillis } = status;
               this.playerStateUpdated({

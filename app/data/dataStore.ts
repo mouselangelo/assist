@@ -5,7 +5,6 @@ import { applicatonDir } from "../helpers/file";
 
 const getDataStoreFile = (collection: string) => {
   const file = path.join(applicatonDir, `${collection}.collection`);
-  console.log("data: file", file);
   return file;
 };
 
@@ -42,7 +41,11 @@ const promisify = <T>(db: DataStore<T>) => {
         });
       });
     },
-    update: (query: Partial<T>, update: Partial<T>, options?: any) =>
+    update: (
+      query: Partial<T>,
+      update: Partial<T>,
+      options: any = { multi: false }
+    ) =>
       new Promise((resolve, reject) => {
         db.update(query, update, options, (err, ...results) =>
           err ? reject(err) : resolve(results)

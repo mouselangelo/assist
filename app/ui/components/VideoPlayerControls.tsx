@@ -17,7 +17,6 @@ class VideoControlButton extends React.Component<{
   timer = 0;
 
   triggerRepeat() {
-    console.log(this.props);
     if (this.props.onLongPressRepeat) {
       this.props.onLongPressRepeat();
       this.timer = setTimeout(this.triggerRepeat, 200);
