@@ -7,6 +7,10 @@
     "web": "expo start --web",
     "eject": "expo eject"
   },
+  "build": {
+    "appId": "com.mouselangelo.assist",
+    "productName": "Assist"
+  },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.0",
@@ -15,7 +19,6 @@
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.4.2",
     "@react-navigation/web": "^1.0.0-alpha.9",
-    "electron": "^6.0.12",
     "expo": "~37.0.3",
     "expo-av": "~8.1.0",
     "expo-document-picker": "~8.1.0",
@@ -52,7 +55,17 @@
     "@types/react-native-vector-icons": "^6.4.5",
     "@types/react-navigation": "^3.4.0",
     "babel-preset-expo": "~8.1.0",
+    "electron": "^6.0.12",
+    "electron-builder": "^22.7.0",
     "typescript": "~3.8.3"
   },
-  "private": true
+  "private": true,
+  "author": {
+    "name": "Chetan Agarwal",
+    "email": "chetan.mouselangelo@gmail.com"
+  },
+  "name": "com.mouselangelo.assist",
+  "displayName": "Assist",
+  "description": "Assist - audio descriptions",
+  "version": "1.0.0"
 }
