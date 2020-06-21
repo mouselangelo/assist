@@ -1,5 +1,11 @@
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path.replace(
+  "app.asar",
+  "app.asar.unpacked"
+);
 import ffmpeg from "fluent-ffmpeg";
 import path from "path";
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 export const convertToAudio = ({
   file,

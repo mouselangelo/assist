@@ -9,9 +9,32 @@
   },
   "build": {
     "appId": "com.mouselangelo.assist",
-    "productName": "Assist"
+    "productName": "Assist",
+    "asar": true,
+    "extraMetadata": {
+      "main": "main.js"
+    },
+    "files": [
+      {
+        "from": "dist/main/",
+        "to": "./",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "dist/renderer",
+        "to": "./",
+        "filter": [
+          "**/*"
+        ]
+      },
+      "package.json",
+      "**/node_modules/**/*"
+    ]
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.0",
     "@react-navigation/drawer": "^5.8.2",
