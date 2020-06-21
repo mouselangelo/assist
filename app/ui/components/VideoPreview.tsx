@@ -40,7 +40,7 @@ class VideoPreview extends React.Component<props> {
     durationMillis?: number;
     positionMillis?: number;
   }) => {
-    if (this.isScrubbing) {
+    if (this.isScrubbing || !this.videoRef) {
       return;
     }
     const isLoading = !isLoaded && isNaN(durationMillis);
@@ -57,6 +57,7 @@ class VideoPreview extends React.Component<props> {
     const { isPlaying, isLoading, isEnded } = this.state;
 
     const action = () => {};
+
     return (
       <View>
         <Video
@@ -72,7 +73,6 @@ class VideoPreview extends React.Component<props> {
           isLooping={false}
           style={{ width: "100%", height }}
           onPlaybackStatusUpdate={(status) => {
-            console.log("onPlaybackStatusUpdate", status);
             this.playerStateUpdated(status);
           }}
         />

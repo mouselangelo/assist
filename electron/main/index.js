@@ -1,20 +1,23 @@
 "use strict";
 
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, screen } from "electron";
 import * as path from "path";
 import { format as formatUrl } from "url";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
+const showDevTools = false;
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
 
 function createMainWindow() {
+  const frame = screen.getPrimaryDisplay().workArea;
   const browserWindow = new BrowserWindow({
+    ...frame,
     webPreferences: { nodeIntegration: true, webSecurity: false },
   });
 
-  if (isDevelopment) {
+  if (isDevelopment && showDevTools) {
     browserWindow.webContents.openDevTools();
   }
 

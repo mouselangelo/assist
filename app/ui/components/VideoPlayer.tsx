@@ -1,8 +1,8 @@
 import { Video } from "expo-av";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 import VideoPlayerControls from "./VideoPlayerControls";
+import Loader from "./Loader";
 
 type props = { file: string };
 
@@ -80,11 +80,7 @@ class VideoPlayer extends React.Component<props> {
           shouldPlay={false}
           isLooping={false}
           style={styles.video}
-          onLoadStart={() => {
-            console.log("started loading");
-          }}
           onPlaybackStatusUpdate={(status) => {
-            console.log("onPlaybackStatusUpdate", status);
             if (status.isLoaded) {
               const { isLoaded, durationMillis, positionMillis } = status;
               this.playerStateUpdated({
@@ -123,11 +119,7 @@ class VideoPlayer extends React.Component<props> {
           }}
           scrubTo={this.scrubTo}
         />
-        {isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator animating={true} />
-          </View>
-        )}
+        {isLoading && <Loader isLoading={isLoading} />}
       </View>
     );
   }

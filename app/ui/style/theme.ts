@@ -22,6 +22,7 @@ export const theme = {
     lightBackground: "#f9f9f9",
     positive: "#118822",
     negative: "#ff6666",
+    secondary: "#666666",
   },
 };
 

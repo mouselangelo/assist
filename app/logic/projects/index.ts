@@ -1,15 +1,51 @@
-import { importVideo } from "../../helpers/file";
 import path from "path";
 
-export const createProject = async () => {
-  const file = await importVideo();
-  if (!file) {
+import db from "../../data";
+import { generateCoverImage } from "../../helpers/ffmpeg";
+import { importVideo, selectProjectLocation } from "../../helpers/file";
+import { Project } from "../../types/Project";
+
+export const startNewProject = async (): Promise<Project | undefined> => {
+  const videoFile = await importVideo();
+  if (!videoFile) {
     return;
   }
-  // read the name & other properties?
-  const fileParts = path.parse(file);
+
+  const { ext, base } = path.parse(videoFile);
+  const title = base.replace(ext, "");
   return {
-    file,
-    title: fileParts.base.replace(fileParts.ext, ""),
+    videoFile,
+    title,
   };
+};
+
+export const saveProject = async ({ project }: { project: Project }) => {
+  const projectLocation =
+    project.location ?? (await selectProjectLocation(project.title));
+
+  if (!projectLocation) {
+    return;
+  }
+
+  project.location = projectLocation;
+
+  if (!project.coverImageFile) {
+    project.coverImageFile = await saveCoverImageToDisk(project);
+  }
+
+  const { _id: projectId } = project;
+  if (!projectId) {
+    return (await db.collection("projects").insert(project))[0];
+  } else {
+    await db.collection("projects").update({ _id: projectId }, project);
+    return project;
+  }
+};
+
+const saveCoverImageToDisk = async (project: Project) => {
+  if (!project.location) {
+    return;
+  }
+  const target = path.join(project.location, "cover.png");
+  return await generateCoverImage({ target, source: project.videoFile });
 };

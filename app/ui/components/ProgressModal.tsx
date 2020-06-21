@@ -1,15 +1,13 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import {
-  ProgressBar,
+  Caption,
+  Card,
   Modal,
   Portal,
-  Button,
+  ProgressBar,
   Provider,
-  Card,
-  Caption,
 } from "react-native-paper";
-import {} from "react-native-paper";
 
 const getName = (stage: string) => {
   switch (stage) {
