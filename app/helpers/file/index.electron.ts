@@ -1,5 +1,6 @@
 import { remote } from "electron";
 import path from "path";
+import fs from "fs";
 
 const { dialog, app } = remote;
 
@@ -28,6 +29,7 @@ export const importVideo = async () => {
 };
 
 export const selectProjectLocation = async (title?: string) => {
+  const projectFolder = title ?? "new AD project";
   const result = await dialog.showOpenDialog({
     title: "Create Project",
     message: "Create Project",
@@ -35,7 +37,7 @@ export const selectProjectLocation = async (title?: string) => {
     properties: ["openDirectory", "createDirectory"],
     defaultPath: path.format({
       dir: lastDir ?? documentsDir,
-      name: title ?? "untitled",
+      name: projectFolder,
     }),
   });
 
@@ -49,6 +51,10 @@ export const selectProjectLocation = async (title?: string) => {
 
   const fileParts = path.parse(location);
   lastDir = fileParts.dir;
+
+  if (fs.readdirSync(location).length !== 0) {
+    throw new Error("Choose empty folder");
+  }
 
   return location;
 };

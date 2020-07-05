@@ -49,3 +49,11 @@ const saveCoverImageToDisk = async (project: Project) => {
   const target = path.join(project.location, "cover.png");
   return await generateCoverImage({ target, source: project.videoFile });
 };
+
+export const deleteProject = async (project: Project) => {
+  console.log(project);
+  if (!project._id) {
+    throw new Error("Project not found");
+  }
+  await db.collection("projects").remove({ _id: project._id });
+};
