@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { FAB } from "react-native-paper";
 
 import db from "../../data";
-import { startNewProject } from "../../logic/projects";
+import { startNewProject, deleteProject } from "../../logic/projects";
 import { Project } from "../../types/Project";
 import EditProjectModal from "../components/EditProjectModal";
 import ProjectCard from "../components/ProjectCard";
@@ -72,6 +72,11 @@ const Projects: React.FC<Props> = ({ navigation }) => {
           project={currentProject}
           onDone={() => {
             setCurrentProject(undefined);
+            loadData();
+          }}
+          onDelete={async () => {
+            setCurrentProject(undefined);
+            await deleteProject(currentProject);
             loadData();
           }}
         />
